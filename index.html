@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Eevie">
+<meta name="theme-color" content="#3A3B9C">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>Eevie's games from Daddy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Grandstander:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sky-top:#3A3B9C; --sky-mid:#6C6FDB; --sky-glow:#FFA3CF;
+  --sea:#3A86E8; --sea-deep:#2352B8; --sand:#F6D9A6;
+  --moon:#FFF3C4; --pink:#FF4FA3; --pink-deep:#C7327A; --pink-soft:#FFD0E6;
+  --blue:#2F86FF; --blue-deep:#1B5CC4; --blue-soft:#CFE6FF;
+  --ink:#2A2466; --paper:#FFFFFF; --on-dark:#FFFFFF;
+  --shadow:rgba(42,36,102,.35);
+  --font:"Grandstander","Chalkboard SE","Comic Sans MS","Trebuchet MS",system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji";
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--sky-top:#26277A;--sky-mid:#4D50B8;--sky-glow:#D884B4;--sea:#2C72D2;--sea-deep:#1A4199;--paper:#FFF8FC;}
+}
+:root[data-theme="dark"]{--sky-top:#26277A;--sky-mid:#4D50B8;--sky-glow:#D884B4;--sea:#2C72D2;--sea-deep:#1A4199;--paper:#FFF8FC;}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px);background:linear-gradient(to bottom,var(--sky-top),var(--sky-mid) 55%,var(--sky-glow))}
+body{height:100%;margin:0;background:var(--sky-top);color:var(--on-dark);font-family:var(--font);overflow:hidden;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+button{font-family:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+button:focus-visible{outline:4px solid var(--moon);outline-offset:4px}
+#app{position:relative;height:100%;width:100%;overflow:hidden}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column}
+.hidden{display:none !important}
+
+/* ---------- Home ---------- */
+#home{background:linear-gradient(to bottom,var(--sky-top) 0%,var(--sky-mid) 60%,var(--sky-glow) 100%);
+  align-items:center;justify-content:space-evenly;text-align:center;padding:12px 16px 22px}
+.sky{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:var(--moon);opacity:.8}
+.star.twinkle{animation:twinkle 3s ease-in-out infinite alternate}
+@keyframes twinkle{from{opacity:.2}to{opacity:.95}}
+.moon{display:block;width:44px;height:44px;border-radius:50%;box-shadow:inset -11px 4px 0 0 var(--moon);transform:rotate(-15deg)}
+.grownup{position:absolute;top:10px;right:12px;width:48px;height:48px;border:0;background:none;padding:8px;z-index:5;-webkit-touch-callout:none}
+.grownup .moon{width:30px;height:30px;box-shadow:inset -8px 3px 0 0 rgba(255,243,196,.5)}
+.preview-banner{position:relative;z-index:4;border:0;border-radius:999px;background:var(--moon);color:var(--ink);
+  padding:8px 18px;font-weight:800;font-size:15px;box-shadow:0 4px 0 var(--shadow);max-width:calc(100% - 110px)}
+.day-name{position:relative;margin:0;font-weight:900;font-size:clamp(36px,8vw,60px);line-height:1.05;text-shadow:0 4px 0 var(--shadow)}
+.trail{position:relative;display:flex;align-items:flex-start;justify-content:center;border:0;background:none;padding:6px}
+.stop{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:54px}
+.stop .mark{height:68px;display:grid;place-items:center}
+.stop .lbl{font-weight:800;font-size:15px;padding:1px 10px;border-radius:999px}
+.stop.ahead .moon{box-shadow:inset -11px 4px 0 0 rgba(255,243,196,.38)}
+.stop.ahead .lbl{opacity:.6}
+.stop.today .moon{width:62px;height:62px;box-shadow:inset -15px 6px 0 0 var(--moon);filter:drop-shadow(0 0 10px rgba(255,243,196,.9))}
+.stop.today .lbl{background:var(--moon);color:var(--ink)}
+.stop .done-star{font-size:36px;line-height:1}
+.stop .house{font-size:40px;line-height:1;opacity:.55}
+.stop.today .house{font-size:60px;opacity:1;filter:drop-shadow(0 0 12px rgba(255,243,196,.9))}
+.link{width:clamp(14px,5vw,44px);border-top:4px dotted rgba(255,255,255,.45);margin:32px 2px 0}
+.link.lit{border-top-style:solid;border-color:var(--moon)}
+.countdown{position:relative;border:0;background:none;padding:4px 8px;font-weight:800;font-size:clamp(21px,4.8vw,32px);line-height:1.2;max-width:18ch;text-shadow:0 3px 0 var(--shadow)}
+#playZone{position:relative;display:flex;flex-direction:column;align-items:center}
+.play-btn{border:0;background:none;padding:0;display:flex;flex-direction:column;align-items:center}
+.play-circle{width:clamp(150px,40vw,220px);aspect-ratio:1;border-radius:50%;border:8px solid var(--pink);
+  background:radial-gradient(circle at 35% 30%,#fff 0%,var(--pink-soft) 75%);
+  box-shadow:0 10px 0 var(--pink-deep),0 18px 30px var(--shadow);display:grid;place-items:center;transition:transform .1s,box-shadow .1s}
+.play-btn:active .play-circle{transform:translateY(6px);box-shadow:0 4px 0 var(--pink-deep),0 8px 16px var(--shadow)}
+.play-emoji{font-size:clamp(78px,21vw,118px);line-height:1;animation:bob 2.6s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.play-label{margin-top:-20px;position:relative;background:var(--moon);color:var(--ink);border-radius:999px;padding:6px 28px;font-weight:900;font-size:26px;box-shadow:0 4px 0 var(--shadow)}
+.again-label{margin:0 0 12px;font-weight:800;font-size:22px;text-shadow:0 3px 0 var(--shadow)}
+.all-games{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.mini{width:clamp(88px,24vw,120px);aspect-ratio:1;border-radius:50%;border:6px solid var(--pink);padding:0;
+  background:radial-gradient(circle at 35% 30%,#fff,var(--pink-soft) 75%);font-size:clamp(46px,13vw,64px);line-height:1;
+  display:grid;place-items:center;box-shadow:0 7px 0 var(--pink-deep)}
+.mini:nth-child(2){border-color:var(--blue);background:radial-gradient(circle at 35% 30%,#fff,var(--blue-soft) 75%);box-shadow:0 7px 0 var(--blue-deep)}
+.mini:active{transform:translateY(4px)}
+.gn-btn{position:relative;border:3px solid var(--moon);background:rgba(255,255,255,.14);border-radius:999px;padding:12px 26px;
+  font-weight:800;font-size:clamp(19px,4.4vw,24px);display:inline-flex;align-items:center;gap:12px}
+.gn-btn .moon{width:26px;height:26px;box-shadow:inset -7px 3px 0 0 var(--moon)}
+.gn-btn .sun{font-size:24px;line-height:1}
+
+/* ---------- Game shell ---------- */
+#game{background:linear-gradient(to bottom,var(--sea),var(--sea-deep))}
+#game.match{background:linear-gradient(to bottom,var(--sky-mid),var(--sky-glow))}
+#game.sort{background:linear-gradient(to bottom,var(--sky-top),var(--sky-mid))}
+.topbar{display:flex;align-items:center;gap:12px;padding:10px 14px;position:relative;z-index:10}
+.icon-btn{width:60px;height:60px;flex:none;border-radius:50%;border:0;background:var(--moon);font-size:30px;line-height:1;
+  box-shadow:0 5px 0 var(--shadow);display:grid;place-items:center;padding:0}
+.icon-btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--shadow)}
+.progress{flex:1;display:flex;justify-content:center;flex-wrap:wrap;gap:7px}
+.dot{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.3);transition:transform .2s,background .2s}
+.dot.on{background:var(--moon);transform:scale(1.15)}
+.spacer{width:60px;flex:none}
+.game-area{flex:1;position:relative;overflow:hidden;touch-action:none}
+
+/* Bubbles */
+.game-area.bubbles::after{content:"";position:absolute;left:-5%;right:-5%;bottom:-20px;height:90px;background:var(--sand);border-radius:50% 50% 0 0;z-index:1}
+.mermaid{position:absolute;left:50%;bottom:34px;font-size:clamp(80px,20vw,120px);line-height:1;z-index:2;pointer-events:none;animation:swim 3s ease-in-out infinite;transform:translateX(-50%)}
+@keyframes swim{0%,100%{transform:translateX(-50%) rotate(-4deg)}50%{transform:translateX(-50%) translateY(-10px) rotate(4deg)}}
+.bubble{position:absolute;bottom:-150px;border:0;padding:0;background:none;z-index:3;animation:rise var(--dur) linear forwards}
+.bubble .wob{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;
+  background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.95) 0 9%,rgba(255,255,255,.18) 11% 55%,rgba(207,230,255,.35) 80%,rgba(255,255,255,.7) 100%);
+  box-shadow:inset 0 0 0 3px rgba(255,255,255,.75),0 0 18px rgba(255,255,255,.25);animation:wob 1.8s ease-in-out infinite alternate}
+.bubble .in{font-size:calc(var(--size) * .42);line-height:1}
+@keyframes rise{to{transform:translateY(var(--rise))}}
+@keyframes wob{from{transform:translateX(-10px)}to{transform:translateX(10px)}}
+@keyframes popit{to{transform:scale(1.5);opacity:0}}
+.spark{position:absolute;width:12px;height:12px;border-radius:50%;pointer-events:none;z-index:4;animation:spark .5s ease-out forwards}
+@keyframes spark{from{transform:translate(-50%,-50%) scale(1);opacity:1}to{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.3);opacity:0}}
+
+/* Match */
+.game-area.match{display:flex;align-items:center;justify-content:center}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(2,1fr);width:min(90vw,440px,calc(66vh - 120px))}
+@media (min-aspect-ratio:1/1){.grid{grid-template-columns:repeat(3,1fr);width:min(88vw,660px,calc(150vh - 260px))}}
+.card{aspect-ratio:1;border:0;padding:0;background:none;perspective:800px;container-type:inline-size}
+.card .inner{position:relative;display:block;width:100%;height:100%;transition:transform .4s;transform-style:preserve-3d}
+.card.up .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;border-radius:24px;display:grid;place-items:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;line-height:1}
+.back{background:repeating-linear-gradient(45deg,var(--pink) 0 18px,#FF79B9 18px 36px);border:5px solid #fff;box-shadow:0 7px 0 var(--shadow);font-size:40px;font-size:38cqi}
+.card:nth-child(even) .back{background:repeating-linear-gradient(45deg,var(--blue) 0 18px,#5AA0FF 18px 36px)}
+.front{background:#fff;transform:rotateY(180deg);border:5px solid var(--moon);box-shadow:0 7px 0 var(--shadow);font-size:60px;font-size:58cqi}
+.card.matched .front{border-color:var(--pink);animation:matched .5s}
+@keyframes matched{50%{transform:rotateY(180deg) scale(1.08)}}
+
+/* Sort */
+.game-area.sort{display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:8px 16px 18px}
+.sort-stage{flex:1;display:grid;place-items:center;width:100%}
+.sort-item{width:clamp(130px,34vw,200px);aspect-ratio:1;border:0;background:none;padding:0}
+.sort-item svg{display:block;width:100%;height:100%;filter:drop-shadow(0 8px 0 rgba(42,36,102,.3))}
+.sort-item.enter{animation:enter .4s cubic-bezier(.3,1.6,.5,1)}
+@keyframes enter{from{transform:scale(0)}}
+.sort-item.fly{animation:fly .55s ease-in forwards}
+@keyframes fly{to{transform:translate(var(--fx),var(--fy)) scale(.2);opacity:.3}}
+.jars{display:flex;gap:clamp(16px,6vw,48px);justify-content:center;width:100%}
+.jar{position:relative;width:clamp(120px,36vw,190px);aspect-ratio:4/5;border:7px solid;border-radius:28px 28px 44px 44px;overflow:hidden;padding:0;box-shadow:0 8px 0 var(--shadow)}
+.jar.blue{border-color:var(--blue);background:rgba(207,230,255,.35)}
+.jar.pink{border-color:var(--pink);background:rgba(255,208,230,.35)}
+.jar-fill{position:absolute;left:0;right:0;bottom:0;height:0;transition:height .5s ease-out}
+.jar.blue .jar-fill{background:var(--blue)}
+.jar.pink .jar-fill{background:var(--pink)}
+.jar-pet{position:absolute;top:10%;left:50%;transform:translateX(-50%);font-size:clamp(48px,13vw,76px);line-height:1;z-index:1}
+.jar-label{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:#fff;border-radius:999px;padding:2px 14px;font-weight:900;font-size:20px;z-index:1}
+.jar.blue .jar-label{color:var(--blue-deep)}
+.jar.pink .jar-label{color:var(--pink-deep)}
+.jar.nope{animation:nope .4s}
+@keyframes nope{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+
+/* ---------- Overlays ---------- */
+.overlay{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:20px;background:rgba(38,32,100,.6)}
+.sheet{position:relative;width:100%;max-width:440px;max-height:100%;overflow:auto;background:var(--paper);color:var(--ink);border-radius:32px;padding:26px 22px 22px;text-align:center;
+  box-shadow:0 20px 50px rgba(20,16,70,.45);animation:popin .35s cubic-bezier(.3,1.5,.5,1)}
+@keyframes popin{from{transform:scale(.6);opacity:0}}
+.sheet h2{margin:0 0 8px;font-weight:900;font-size:clamp(28px,7vw,38px);line-height:1.1}
+.big-emoji{font-size:84px;line-height:1;margin-bottom:8px}
+.btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.btn{border:0;border-radius:999px;padding:14px 26px;font-weight:900;font-size:22px;color:#fff;background:var(--blue);box-shadow:0 5px 0 var(--shadow)}
+.btn.pink{background:var(--pink)}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 3px currentColor}
+.btn:active{transform:translateY(3px)}
+.sheet.night{background:linear-gradient(to bottom,#2F3190,#5256C4);color:#fff}
+.sheet.night .btn.ghost{color:#fff}
+.gn-icon{display:flex;justify-content:center;margin-bottom:10px}
+.gn-icon .moon{width:70px;height:70px;box-shadow:inset -18px 7px 0 0 var(--moon)}
+.gn-icon .sun-big{font-size:64px;line-height:1}
+.gn-text{font-size:clamp(19px,4.6vw,23px);line-height:1.45;margin:10px 0 6px;font-weight:600;text-align:left}
+.gn-sign{margin:0;text-align:right;font-weight:800;font-size:22px}
+.gate-q{font-size:30px;font-weight:800;margin:8px 0 4px}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.days{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.days .btn{font-size:19px;background:var(--sky-mid)}
+.small{font-size:15px;opacity:.75;margin:12px 0 0;font-weight:600;line-height:1.4}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:51;overflow:hidden}
+.confetti i{position:absolute;top:-24px;width:12px;height:18px;border-radius:3px;animation:fall var(--t) linear var(--d) forwards}
+@keyframes fall{to{transform:translate(var(--x),110vh) rotate(var(--r))}}
+
+@media (max-height:540px){
+  .day-name{font-size:30px}
+  .stop .mark{height:50px}.link{margin-top:23px}
+  .stop.today .moon{width:44px;height:44px}.stop.today .house{font-size:44px}
+  .play-circle{width:120px;border-width:6px}.play-emoji{font-size:66px}.play-label{font-size:20px;margin-top:-16px}
+  .countdown{font-size:20px}
+  .jar{aspect-ratio:6/5;width:clamp(110px,24vw,160px)}.sort-item{width:110px}
+  .mermaid{font-size:70px}
+}
+@media (prefers-reduced-motion: reduce){
+  .play-emoji,.mermaid,.star.twinkle,.bubble .wob{animation:none}
+  .confetti{display:none}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <section id="home" class="screen">
+    <div class="sky" id="sky"></div>
+    <button class="grownup" id="grownup" aria-label="Grown-up menu, press and hold"><span class="moon"></span></button>
+    <button class="preview-banner hidden" id="previewBanner"></button>
+    <h1 class="day-name" id="dayName"></h1>
+    <button class="trail" id="trail" aria-label="Sleeps until Daddy is home"></button>
+    <button class="countdown" id="countdown"></button>
+    <div id="playZone"></div>
+    <button class="gn-btn" id="gnBtn"></button>
+  </section>
+
+  <section id="game" class="screen hidden">
+    <div class="topbar">
+      <button class="icon-btn" id="homeBtn" aria-label="Go home">🏠</button>
+      <div class="progress" id="progress"></div>
+      <div class="spacer"></div>
+    </div>
+    <div class="game-area" id="gameArea"></div>
+  </section>
+</div>
+
+<div class="overlay hidden" id="winOverlay">
+  <div class="sheet">
+    <div class="big-emoji" id="winEmoji">🎉</div>
+    <h2>You did it, Eevie!</h2>
+    <div class="btn-row">
+      <button class="btn pink" id="againBtn">Play again</button>
+      <button class="btn" id="winHomeBtn">Home</button>
+    </div>
+  </div>
+</div>
+<div class="confetti hidden" id="confetti"></div>
+
+<div class="overlay hidden" id="gnOverlay">
+  <div class="sheet night">
+    <div class="gn-icon" id="gnIcon"></div>
+    <h2 id="gnTitle"></h2>
+    <p class="gn-text" id="gnText"></p>
+    <p class="gn-sign">Love, Daddy</p>
+    <div class="btn-row">
+      <button class="btn pink" id="gnHear">Hear it again</button>
+      <button class="btn ghost" id="gnClose">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="parentOverlay">
+  <div class="sheet" id="parentSheet"></div>
+</div>
+
+<script>
+/* ============ Edit these to change names, dates, or messages ============ */
+const NAME = "Eevie";
+const HOME_DATE = 20261001; // the morning she sees Daddy again
+const DAYS = [
+  { date:20260928, name:"Monday", short:"Mon", game:"bubbles", icon:"🧜‍♀️", title:"Mermaid bubbles",
+    intro:"Help the mermaid! Pop the bubbles!",
+    goodnight:"Daddy had to go on a work trip today, and I'm already missing you. Only three more sleeps and I'll be home. Dream about mermaids and unicorns tonight. I love you to the moon and back!" },
+  { date:20260929, name:"Tuesday", short:"Tue", game:"match", icon:"🦄", title:"Unicorn match",
+    intro:"Tap the cards and find the ones that match!",
+    goodnight:"I hope you had a super fun day. Give Mommy a big hug from me. Just two more sleeps until I'm home! Sweet dreams, my sweet girl. I love you so much." },
+  { date:20260930, name:"Wednesday", short:"Wed", game:"sort", icon:"⭐", title:"Pink and blue",
+    intro:"Pink things go in the unicorn's jar. Blue things go in the mermaid's jar!",
+    goodnight:"This is the very last sleep! When you wake up in the morning, Daddy will be home. I'll sneak in and give you a kiss while you're sleeping. I love you!" }
+];
+const HOME_MSG = { title:"Good morning, " + NAME + "!",
+  msg:"Daddy's home! I missed you so, so much. Come find me and give me the biggest hug ever!" };
+/* ======================================================================= */
+
+const $ = s => document.querySelector(s);
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const shuffle = arr => { const a = arr.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+
+/* ---- Which day is it? Uses the device's own clock, so it flips at her midnight. ---- */
+function todayNum(){ const d=new Date(); return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate(); }
+function realIndex(){
+  const t = todayNum();
+  if (t >= HOME_DATE) return 3;
+  for (let i=DAYS.length-1;i>=0;i--) if (t >= DAYS[i].date) return i;
+  return 0;
+}
+let preview = null, renderedIndex = -1;
+const dayIndex = () => preview === null ? realIndex() : preview;
+
+/* ---- Voice ---- */
+const canSpeak = "speechSynthesis" in window;
+let voice = null;
+function pickVoice(){
+  try{
+    // On-device voices first: they keep working with no internet.
+    const vs = speechSynthesis.getVoices();
+    const local = vs.filter(v => v.localService);
+    const names = ["Samantha","Karen","Moira","Tessa","Jenny","Aria","Zira","Google US English"];
+    for (const list of [local, vs]){
+      for (const p of names){ const v = list.find(v => v.name.includes(p) && /^en/i.test(v.lang)); if (v) return v; }
+      const v = list.find(v => /^en[-_]US/i.test(v.lang)) || list.find(v => /^en/i.test(v.lang));
+      if (v) return v;
+    }
+    return null;
+  }catch(e){ return null; }
+}
+if (canSpeak){ voice = pickVoice(); try{ speechSynthesis.onvoiceschanged = () => { voice = pickVoice(); }; }catch(e){} }
+function say(text){
+  if (!canSpeak) return;
+  try{
+    const u = new SpeechSynthesisUtterance(text);
+    if (!voice) voice = pickVoice();
+    if (voice){ u.voice = voice; u.lang = voice.lang; } else u.lang = "en-US";
+    u.rate = .9; u.pitch = 1.15;
+    if (speechSynthesis.speaking || speechSynthesis.pending){ speechSynthesis.cancel(); setTimeout(() => speechSynthesis.speak(u), 60); }
+    else speechSynthesis.speak(u);
+  }catch(e){}
+}
+function hush(){ if (canSpeak) try{ speechSynthesis.cancel(); }catch(e){} }
+
+/* ---- Sounds ---- */
+let actx = null;
+function ac(){
+  try{
+    if (!actx){ const C = window.AudioContext || window.webkitAudioContext; if (!C) return null; actx = new C(); }
+    if (actx.state === "suspended") actx.resume();
+    return actx;
+  }catch(e){ return null; }
+}
+function tone(freq, dur=.15, type="sine", vol=.2, when=0, slideTo=null){
+  const a = ac(); if (!a) return;
+  const t = a.currentTime + when, o = a.createOscillator(), g = a.createGain();
+  o.type = type; o.frequency.setValueAtTime(freq, t);
+  if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t+dur);
+  g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t+.01); g.gain.exponentialRampToValueAtTime(.0001, t+dur);
+  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t+dur+.02);
+}
+const sfx = {
+  pop(){ tone(480,.12,"sine",.25,0,1100); },
+  chime(){ [880,1175,1568].forEach((f,i)=>tone(f,.25,"triangle",.15,i*.07)); },
+  boop(){ tone(260,.2,"sine",.18,0,190); },
+  flip(){ tone(700,.07,"triangle",.12); },
+  fanfare(){ [523,659,784,1047,784,1047].forEach((f,i)=>tone(f,.24,"triangle",.18,i*.12)); }
+};
+document.addEventListener("pointerdown", () => ac(), { once:true, capture:true });
+
+/* ---- Screens & overlays ---- */
+function showScreen(id){ ["home","game"].forEach(s => $("#"+s).classList.toggle("hidden", s !== id)); }
+const showOverlay = sel => $(sel).classList.remove("hidden");
+const hideOverlay = sel => $(sel).classList.add("hidden");
+
+function makeStars(){
+  const sky = $("#sky");
+  for (let i=0;i<34;i++){
+    const s = document.createElement("span");
+    s.className = "star" + (i%3===0 ? " twinkle" : "");
+    const z = 2 + Math.random()*3;
+    s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*55}%;width:${z}px;height:${z}px;animation-delay:${(Math.random()*3).toFixed(2)}s`;
+    sky.appendChild(s);
+  }
+}
+
+function countdownText(i){
+  const left = 3 - i;
+  if (left <= 0) return "Go give Daddy the biggest hug!";
+  return left === 1 ? "Just 1 more sleep until Daddy's home!" : `${left} more sleeps until Daddy's home!`;
+}
+
+function renderHome(){
+  const i = dayIndex(), isHome = i === 3;
+  $("#dayName").textContent = isHome ? "Daddy's home!" : DAYS[i].name;
+
+  const pb = $("#previewBanner");
+  if (preview !== null){ pb.textContent = `Preview: ${isHome ? "Thursday" : DAYS[i].name}. Tap to go back to today.`; pb.classList.remove("hidden"); }
+  else pb.classList.add("hidden");
+
+  const trail = $("#trail"); trail.innerHTML = "";
+  for (let k=0;k<4;k++){
+    const st = document.createElement("span"); st.className = "stop";
+    let mark, label;
+    if (k < 3){
+      const state = k < i ? "done" : k === i ? "today" : "ahead";
+      st.classList.add(state);
+      mark = state === "done" ? '<span class="done-star">⭐</span>' : '<span class="moon"></span>';
+      label = DAYS[k].short;
+    } else {
+      st.classList.add(isHome ? "today" : "ahead");
+      mark = '<span class="house">🏡</span>'; label = "Daddy!";
+    }
+    st.innerHTML = `<span class="mark">${mark}</span><span class="lbl">${label}</span>`;
+    trail.appendChild(st);
+    if (k < 3){ const l = document.createElement("span"); l.className = "link" + (k < i ? " lit" : ""); trail.appendChild(l); }
+  }
+  $("#countdown").textContent = countdownText(i);
+
+  const pz = $("#playZone");
+  if (!isHome){
+    pz.innerHTML = `<button class="play-btn" id="playBtn" aria-label="Play ${DAYS[i].title}"><span class="play-circle"><span class="play-emoji">${DAYS[i].icon}</span></span><span class="play-label">Play!</span></button>`;
+    $("#playBtn").addEventListener("click", () => startGame(i));
+    $("#gnBtn").innerHTML = '<span class="moon"></span><span>Goodnight from Daddy</span>';
+  } else {
+    pz.innerHTML = `<p class="again-label">Play them all again!</p><div class="all-games">${DAYS.map((d,k)=>`<button class="mini" data-k="${k}" aria-label="Play ${d.title}">${d.icon}</button>`).join("")}</div>`;
+    pz.querySelectorAll(".mini").forEach(b => b.addEventListener("click", () => startGame(+b.dataset.k)));
+    $("#gnBtn").innerHTML = '<span class="sun">☀️</span><span>Good morning from Daddy</span>';
+  }
+  renderedIndex = i;
+}
+
+/* ---- Game control ---- */
+let current = null, currentK = 0, confettiT = null;
+function setProgress(n, total){
+  const p = $("#progress");
+  if (p.children.length !== total){ p.innerHTML = ""; for (let i=0;i<total;i++){ const d=document.createElement("span"); d.className="dot"; p.appendChild(d); } }
+  [...p.children].forEach((d,i) => d.classList.toggle("on", i < n));
+}
+function startGame(k){
+  ac();
+  if (current){ current.stop(); current = null; }
+  currentK = k; const d = DAYS[k];
+  $("#game").className = "screen " + d.game;
+  const area = $("#gameArea"); area.innerHTML = ""; area.className = "game-area " + d.game;
+  showScreen("game");
+  current = GAMES[d.game](area);
+  say(d.intro);
+}
+function goHome(){
+  if (current){ current.stop(); current = null; }
+  hush(); hideOverlay("#winOverlay"); clearConfetti();
+  renderHome(); showScreen("home");
+}
+function win(){
+  sfx.fanfare();
+  setTimeout(() => say(pick([`Yay, ${NAME}! You did it!`, `Hooray, ${NAME}! Great job!`, `Wow, ${NAME}! You did it!`])), 250);
+  $("#winEmoji").textContent = DAYS[currentK].icon;
+  showOverlay("#winOverlay"); confetti();
+}
+function confetti(){
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const c = $("#confetti"); c.innerHTML = ""; c.classList.remove("hidden");
+  const cols = ["#FF4FA3","#2F86FF","#FFF3C4","#8FF0E0","#FFD0E6","#CFE6FF"];
+  for (let i=0;i<70;i++){
+    const p = document.createElement("i");
+    p.style.left = Math.random()*100 + "%"; p.style.background = pick(cols);
+    p.style.setProperty("--t", (2.2+Math.random()*2).toFixed(2)+"s");
+    p.style.setProperty("--d", (Math.random()*.8).toFixed(2)+"s");
+    p.style.setProperty("--x", Math.round(Math.random()*160-80)+"px");
+    p.style.setProperty("--r", Math.round(Math.random()*720-360)+"deg");
+    if (Math.random() < .3) p.style.borderRadius = "50%";
+    c.appendChild(p);
+  }
+  clearTimeout(confettiT); confettiT = setTimeout(clearConfetti, 5000);
+}
+function clearConfetti(){ const c = $("#confetti"); c.innerHTML = ""; c.classList.add("hidden"); }
+function sparkle(area, x, y){
+  const cols = ["#FFF3C4","#FF4FA3","#8FF0E0","#FFFFFF"];
+  for (let i=0;i<10;i++){
+    const s = document.createElement("span"); s.className = "spark";
+    const ang = Math.PI*2*i/10, dist = 40 + Math.random()*30;
+    s.style.left = x+"px"; s.style.top = y+"px"; s.style.background = pick(cols);
+    s.style.setProperty("--dx", Math.cos(ang)*dist+"px"); s.style.setProperty("--dy", Math.sin(ang)*dist+"px");
+    s.addEventListener("animationend", () => s.remove());
+    area.appendChild(s);
+  }
+}
+
+/* ---- Monday: Mermaid bubbles ---- */
+function bubbles(area){
+  const total = 12; let popped = 0, alive = true; const timers = [];
+  setProgress(0, total);
+  area.insertAdjacentHTML("beforeend", '<div class="mermaid">🧜‍♀️</div>');
+  const treats = ["🐠","🐚","⭐","🐙","💖","🦀","🐡","🌸","🐬"];
+  function spawn(){
+    if (!alive) return;
+    if (area.querySelectorAll(".bubble:not(.popped)").length < 6) makeBubble();
+    timers.push(setTimeout(spawn, 650 + Math.random()*550));
+  }
+  function makeBubble(){
+    const w = area.clientWidth, h = area.clientHeight;
+    const size = Math.round(Math.min(130, Math.max(84, w*.2)) * (.85 + Math.random()*.3));
+    const b = document.createElement("button");
+    b.className = "bubble"; b.setAttribute("aria-label", "Pop the bubble");
+    b.style.width = b.style.height = size + "px";
+    b.style.left = Math.round(8 + Math.random()*Math.max(0, w-size-16)) + "px";
+    b.style.setProperty("--size", size+"px");
+    b.style.setProperty("--dur", (5.5 + Math.random()*3).toFixed(2)+"s");
+    b.style.setProperty("--rise", -(h + size + 170)+"px");
+    b.innerHTML = `<span class="wob" style="animation-delay:-${(Math.random()*1.8).toFixed(2)}s"><span class="in">${pick(treats)}</span></span>`;
+    b.addEventListener("pointerdown", e => { e.preventDefault(); pop(b); });
+    b.addEventListener("animationend", e => { if (e.target === b) b.remove(); });
+    area.appendChild(b);
+  }
+  function pop(b){
+    if (!alive || b.classList.contains("popped")) return;
+    b.classList.add("popped");
+    const r = b.getBoundingClientRect(), ar = area.getBoundingClientRect();
+    b.style.bottom = "auto"; b.style.top = (r.top-ar.top)+"px"; b.style.left = (r.left-ar.left)+"px";
+    b.style.transform = "none"; b.style.animation = "popit .28s ease-out forwards";
+    sparkle(area, r.left-ar.left+r.width/2, r.top-ar.top+r.height/2);
+    sfx.pop();
+    popped++; setProgress(popped, total); say(String(popped));
+    if (popped >= total){ alive = false; timers.push(setTimeout(win, 900)); }
+  }
+  spawn();
+  return { stop(){ alive = false; timers.forEach(clearTimeout); } };
+}
+
+/* ---- Tuesday: Unicorn match ---- */
+function match(area){
+  const pool = ["🦄","🧜‍♀️","🌈","🐚","💖","🍓","⭐","🐬"];
+  const picks = ["🦄", ...shuffle(pool.slice(1)).slice(0,2)];
+  const cards = shuffle([...picks, ...picks]);
+  const total = 3; let found = 0, open = [], lock = false, alive = true; const timers = [];
+  setProgress(0, total);
+  const grid = document.createElement("div"); grid.className = "grid";
+  cards.forEach(em => {
+    const c = document.createElement("button"); c.className = "card"; c.dataset.em = em; c.setAttribute("aria-label", "Card");
+    c.innerHTML = `<span class="inner"><span class="face back">✨</span><span class="face front">${em}</span></span>`;
+    c.addEventListener("pointerdown", e => { e.preventDefault(); flip(c); });
+    grid.appendChild(c);
+  });
+  area.appendChild(grid);
+  function flip(c){
+    if (!alive || lock || c.classList.contains("up")) return;
+    c.classList.add("up"); sfx.flip(); open.push(c);
+    if (open.length < 2) return;
+    lock = true; const [a, b] = open;
+    if (a.dataset.em === b.dataset.em){
+      timers.push(setTimeout(() => {
+        a.classList.add("matched"); b.classList.add("matched"); sfx.chime();
+        found++; setProgress(found, total); open = []; lock = false;
+        if (found === total){ alive = false; timers.push(setTimeout(win, 900)); }
+        else say(pick(["Yay! A match!","You found it!","Great job!"]));
+      }, 400));
+    } else {
+      timers.push(setTimeout(() => { a.classList.remove("up"); b.classList.remove("up"); open = []; lock = false; }, 1100));
+    }
+  }
+  return { stop(){ alive = false; timers.forEach(clearTimeout); } };
+}
+
+/* ---- Wednesday: Pink and blue ---- */
+function shapeSVG(shape, color){
+  const fill = color === "pink" ? "#FF4FA3" : "#2F86FF";
+  const face = y => `<circle cx="40" cy="${y}" r="4.5" fill="#2A2466"/><circle cx="60" cy="${y}" r="4.5" fill="#2A2466"/><path d="M42 ${y+9} Q50 ${y+16} 58 ${y+9}" stroke="#2A2466" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
+  let body;
+  if (shape === "star") body = `<polygon points="50,5 62,37 96,38 69,59 79,93 50,73 21,93 31,59 4,38 38,37" fill="${fill}" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>` + face(50);
+  else if (shape === "heart") body = `<path d="M50 90 C 22 70, 5 52, 5 32 C 5 17, 16 7, 29 7 C 39 7, 46 13, 50 21 C 54 13, 61 7, 71 7 C 84 7, 95 17, 95 32 C 95 52, 78 70, 50 90 Z" fill="${fill}" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>` + face(38);
+  else body = `<circle cx="50" cy="50" r="42" fill="${fill}" stroke="#fff" stroke-width="5"/><circle cx="34" cy="31" r="9" fill="#fff" opacity=".55"/>` + face(48);
+  return `<svg viewBox="0 0 100 100" aria-hidden="true">${body}</svg>`;
+}
+function sort(area){
+  const total = 10; let done = 0, alive = true, busy = false, cur = null; const timers = [];
+  const queue = shuffle([..."ppppp".split("").map(()=>"pink"), ..."bbbbb".split("").map(()=>"blue")])
+    .map(color => ({ color, shape: pick(["star","heart","pearl"]) }));
+  const counts = { pink:0, blue:0 };
+  setProgress(0, total);
+  area.innerHTML = `
+    <div class="sort-stage"><button class="sort-item" aria-label="Tap to hear the color"></button></div>
+    <div class="jars">
+      <button class="jar blue" data-color="blue" aria-label="Blue jar"><span class="jar-fill"></span><span class="jar-pet">🧜‍♀️</span><span class="jar-label">Blue</span></button>
+      <button class="jar pink" data-color="pink" aria-label="Pink jar"><span class="jar-fill"></span><span class="jar-pet">🦄</span><span class="jar-label">Pink</span></button>
+    </div>`;
+  const item = area.querySelector(".sort-item");
+  const cap = s => s[0].toUpperCase() + s.slice(1);
+  function next(){
+    cur = queue.shift();
+    item.innerHTML = shapeSVG(cur.shape, cur.color);
+    item.className = "sort-item"; void item.offsetWidth; item.className = "sort-item enter";
+    busy = false;
+  }
+  item.addEventListener("pointerdown", e => { e.preventDefault(); if (cur && !busy) say(`${cap(cur.color)} ${cur.shape}!`); });
+  area.querySelectorAll(".jar").forEach(j => j.addEventListener("pointerdown", e => { e.preventDefault(); choose(j); }));
+  function choose(j){
+    if (!alive || busy || !cur) return;
+    if (j.dataset.color === cur.color){
+      busy = true; sfx.chime(); say(cap(cur.color) + "!");
+      const ir = item.getBoundingClientRect(), jr = j.getBoundingClientRect();
+      item.style.setProperty("--fx", (jr.left + jr.width/2 - (ir.left + ir.width/2)) + "px");
+      item.style.setProperty("--fy", (jr.top + jr.height*.45 - (ir.top + ir.height/2)) + "px");
+      item.className = "sort-item fly";
+      counts[cur.color]++; j.querySelector(".jar-fill").style.height = (counts[cur.color]/5*72) + "%";
+      done++; setProgress(done, total);
+      timers.push(setTimeout(() => { if (done >= total){ alive = false; win(); } else next(); }, 650));
+    } else {
+      sfx.boop(); say(`Oops! That one is ${cur.color}. Try the ${cur.color} jar!`);
+      j.classList.remove("nope"); void j.offsetWidth; j.classList.add("nope");
+    }
+  }
+  next();
+  return { stop(){ alive = false; timers.forEach(clearTimeout); } };
+}
+const GAMES = { bubbles, match, sort };
+
+/* ---- Goodnight message ---- */
+function openGoodnight(){
+  ac();
+  const i = dayIndex(), isHome = i === 3;
+  const title = isHome ? HOME_MSG.title : `Goodnight, ${NAME}!`;
+  const msg = isHome ? HOME_MSG.msg : DAYS[i].goodnight;
+  $("#gnIcon").innerHTML = isHome ? '<span class="sun-big">☀️</span>' : '<span class="moon"></span>';
+  $("#gnTitle").textContent = title; $("#gnText").textContent = msg;
+  showOverlay("#gnOverlay");
+  say(`${title} ${msg} Love, Daddy.`);
+}
+
+/* ---- Grown-up preview (press and hold the little moon, top right) ---- */
+let holdT = null;
+const gu = $("#grownup");
+gu.addEventListener("pointerdown", e => { e.preventDefault(); clearTimeout(holdT); holdT = setTimeout(openGate, 1200); });
+["pointerup","pointerleave","pointercancel"].forEach(ev => gu.addEventListener(ev, () => clearTimeout(holdT)));
+gu.addEventListener("contextmenu", e => e.preventDefault());
+function openGate(){
+  const a = 4 + Math.floor(Math.random()*6), b = 3 + Math.floor(Math.random()*7), ans = a + b;
+  const opts = new Set([ans]); while (opts.size < 4) opts.add(ans + pick([-3,-2,-1,1,2,3]));
+  const sheet = $("#parentSheet");
+  sheet.innerHTML = `<h2>For grown-ups</h2><p class="gate-q">What is ${a} + ${b}?</p>
+    <div class="choices">${shuffle([...opts]).map(n => `<button class="btn" data-n="${n}">${n}</button>`).join("")}</div>
+    <div class="btn-row"><button class="btn ghost" data-close>Cancel</button></div>`;
+  sheet.querySelectorAll("[data-n]").forEach(btn => btn.addEventListener("click", () => { +btn.dataset.n === ans ? openPicker() : hideOverlay("#parentOverlay"); }));
+  sheet.querySelector("[data-close]").addEventListener("click", () => hideOverlay("#parentOverlay"));
+  showOverlay("#parentOverlay");
+}
+function openPicker(){
+  const sheet = $("#parentSheet");
+  const labels = [...DAYS.map(d => `${d.name}: ${d.title}`), "Thursday: Daddy's home"];
+  sheet.innerHTML = `<h2>Preview a day</h2>
+    <div class="days">${labels.map((l,k) => `<button class="btn" data-k="${k}">${l}</button>`).join("")}</div>
+    <div class="btn-row"><button class="btn pink" data-today>Back to today</button></div>
+    <p class="small">${NAME} only ever gets today's game. Previewing here doesn't change that, and it resets when the page reloads.</p>`;
+  sheet.querySelectorAll("[data-k]").forEach(btn => btn.addEventListener("click", () => { preview = +btn.dataset.k; hideOverlay("#parentOverlay"); renderHome(); }));
+  sheet.querySelector("[data-today]").addEventListener("click", () => { preview = null; hideOverlay("#parentOverlay"); renderHome(); });
+}
+
+/* ---- Wire up ---- */
+$("#previewBanner").addEventListener("click", () => { preview = null; renderHome(); });
+$("#countdown").addEventListener("click", () => say(countdownText(dayIndex())));
+$("#trail").addEventListener("click", () => say(countdownText(dayIndex())));
+$("#gnBtn").addEventListener("click", openGoodnight);
+$("#gnHear").addEventListener("click", () => say(`${$("#gnTitle").textContent} ${$("#gnText").textContent} Love, Daddy.`));
+$("#gnClose").addEventListener("click", () => { hush(); hideOverlay("#gnOverlay"); });
+$("#homeBtn").addEventListener("click", goHome);
+$("#winHomeBtn").addEventListener("click", goHome);
+$("#againBtn").addEventListener("click", () => { hideOverlay("#winOverlay"); clearConfetti(); startGame(currentK); });
+
+function checkRollover(){
+  if (preview === null && realIndex() !== renderedIndex && !$("#home").classList.contains("hidden")) renderHome();
+}
+setInterval(checkRollover, 30000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) checkRollover(); });
+
+makeStars();
+renderHome();
+showScreen("home");
+
+/* ---- Offline support ---- */
+if ("serviceWorker" in navigator){
+  window.addEventListener("load", () => { navigator.serviceWorker.register("./sw.js").catch(() => {}); });
+}
+</script>
+</body>
+</html>
