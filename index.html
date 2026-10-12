@@ -92,69 +92,77 @@ button:focus-visible{outline:4px solid var(--moon);outline-offset:4px}
 
 /* ---------- Game shell ---------- */
 #game{background:linear-gradient(to bottom,var(--sea),var(--sea-deep))}
-#game.match{background:linear-gradient(to bottom,var(--sky-mid),var(--sky-glow))}
-#game.sort{background:linear-gradient(to bottom,var(--sky-top),var(--sky-mid))}
 .topbar{display:flex;align-items:center;gap:12px;padding:10px 14px;position:relative;z-index:10}
 .icon-btn{width:60px;height:60px;flex:none;border-radius:50%;border:0;background:var(--moon);font-size:30px;line-height:1;
   box-shadow:0 5px 0 var(--shadow);display:grid;place-items:center;padding:0}
 .icon-btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--shadow)}
-.progress{flex:1;display:flex;justify-content:center;flex-wrap:wrap;gap:7px}
-.dot{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.3);transition:transform .2s,background .2s}
+.progress{flex:1;display:flex;justify-content:center;flex-wrap:wrap;gap:6px}
+.dot{width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,.3);transition:transform .2s,background .2s}
 .dot.on{background:var(--moon);transform:scale(1.15)}
 .spacer{width:60px;flex:none}
 .game-area{flex:1;position:relative;overflow:hidden;touch-action:none}
 
-/* Bubbles */
-.game-area.bubbles::after{content:"";position:absolute;left:-5%;right:-5%;bottom:-20px;height:90px;background:var(--sand);border-radius:50% 50% 0 0;z-index:1}
-.mermaid{position:absolute;left:50%;bottom:34px;font-size:clamp(80px,20vw,120px);line-height:1;z-index:2;pointer-events:none;animation:swim 3s ease-in-out infinite;transform:translateX(-50%)}
-@keyframes swim{0%,100%{transform:translateX(-50%) rotate(-4deg)}50%{transform:translateX(-50%) translateY(-10px) rotate(4deg)}}
-.bubble{position:absolute;bottom:-150px;border:0;padding:0;background:none;z-index:3;animation:rise var(--dur) linear forwards}
-.bubble .wob{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;
-  background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.95) 0 9%,rgba(255,255,255,.18) 11% 55%,rgba(207,230,255,.35) 80%,rgba(255,255,255,.7) 100%);
-  box-shadow:inset 0 0 0 3px rgba(255,255,255,.75),0 0 18px rgba(255,255,255,.25);animation:wob 1.8s ease-in-out infinite alternate}
-.bubble .in{font-size:calc(var(--size) * .42);line-height:1}
-@keyframes rise{to{transform:translateY(var(--rise))}}
-@keyframes wob{from{transform:translateX(-10px)}to{transform:translateX(10px)}}
-@keyframes popit{to{transform:scale(1.5);opacity:0}}
+/* Shared game bits */
 .spark{position:absolute;width:12px;height:12px;border-radius:50%;pointer-events:none;z-index:4;animation:spark .5s ease-out forwards}
 @keyframes spark{from{transform:translate(-50%,-50%) scale(1);opacity:1}to{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.3);opacity:0}}
-
-/* Match */
-.game-area.match{display:flex;align-items:center;justify-content:center}
-.grid{display:grid;gap:14px;grid-template-columns:repeat(2,1fr);width:min(90vw,440px,calc(66vh - 120px))}
-@media (min-aspect-ratio:1/1){.grid{grid-template-columns:repeat(3,1fr);width:min(88vw,660px,calc(150vh - 260px))}}
-.card{aspect-ratio:1;border:0;padding:0;background:none;perspective:800px;container-type:inline-size}
-.card .inner{position:relative;display:block;width:100%;height:100%;transition:transform .4s;transform-style:preserve-3d}
-.card.up .inner{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;border-radius:24px;display:grid;place-items:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;line-height:1}
-.back{background:repeating-linear-gradient(45deg,var(--pink) 0 18px,#FF79B9 18px 36px);border:5px solid #fff;box-shadow:0 7px 0 var(--shadow);font-size:40px;font-size:38cqi}
-.card:nth-child(even) .back{background:repeating-linear-gradient(45deg,var(--blue) 0 18px,#5AA0FF 18px 36px)}
-.front{background:#fff;transform:rotateY(180deg);border:5px solid var(--moon);box-shadow:0 7px 0 var(--shadow);font-size:60px;font-size:58cqi}
-.card.matched .front{border-color:var(--pink);animation:matched .5s}
-@keyframes matched{50%{transform:rotateY(180deg) scale(1.08)}}
-
-/* Sort */
-.game-area.sort{display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:8px 16px 18px}
-.sort-stage{flex:1;display:grid;place-items:center;width:100%}
-.sort-item{width:clamp(130px,34vw,200px);aspect-ratio:1;border:0;background:none;padding:0}
-.sort-item svg{display:block;width:100%;height:100%;filter:drop-shadow(0 8px 0 rgba(42,36,102,.3))}
-.sort-item.enter{animation:enter .4s cubic-bezier(.3,1.6,.5,1)}
 @keyframes enter{from{transform:scale(0)}}
-.sort-item.fly{animation:fly .55s ease-in forwards}
-@keyframes fly{to{transform:translate(var(--fx),var(--fy)) scale(.2);opacity:.3}}
-.jars{display:flex;gap:clamp(16px,6vw,48px);justify-content:center;width:100%}
-.jar{position:relative;width:clamp(120px,36vw,190px);aspect-ratio:4/5;border:7px solid;border-radius:28px 28px 44px 44px;overflow:hidden;padding:0;box-shadow:0 8px 0 var(--shadow)}
-.jar.blue{border-color:var(--blue);background:rgba(207,230,255,.35)}
-.jar.pink{border-color:var(--pink);background:rgba(255,208,230,.35)}
-.jar-fill{position:absolute;left:0;right:0;bottom:0;height:0;transition:height .5s ease-out}
-.jar.blue .jar-fill{background:var(--blue)}
-.jar.pink .jar-fill{background:var(--pink)}
-.jar-pet{position:absolute;top:10%;left:50%;transform:translateX(-50%);font-size:clamp(48px,13vw,76px);line-height:1;z-index:1}
-.jar-label{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:#fff;border-radius:999px;padding:2px 14px;font-weight:900;font-size:20px;z-index:1}
-.jar.blue .jar-label{color:var(--blue-deep)}
-.jar.pink .jar-label{color:var(--pink-deep)}
-.jar.nope{animation:nope .4s}
 @keyframes nope{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+
+/* Monday: Shell peekaboo */
+.game-area.peekaboo{display:flex;align-items:center;justify-content:center;padding:10px 12px 0}
+.game-area.peekaboo::after{content:"";position:absolute;left:-5%;right:-5%;bottom:-30px;height:30%;background:var(--sand);border-radius:50% 50% 0 0;z-index:0}
+.shells{position:relative;z-index:1;display:grid;grid-template-columns:repeat(2,1fr);gap:12px 18px;width:min(92vw,460px,calc(66vh - 120px))}
+@media (min-aspect-ratio:1/1){.shells{grid-template-columns:repeat(3,1fr);width:min(90vw,660px,calc(150vh - 220px))}}
+.spot{position:relative;aspect-ratio:1;border:0;padding:0;background:none;container-type:inline-size}
+.spot .window{position:absolute;left:10%;right:10%;top:0;bottom:30%;overflow:hidden}
+.friend{position:absolute;left:0;right:0;bottom:0;height:100%;display:flex;align-items:flex-end;justify-content:center;font-size:60px;font-size:54cqi;line-height:1;
+  transform:translateY(105%);transition:transform .35s cubic-bezier(.3,1.4,.5,1)}
+.spot.up .friend{transform:translateY(6%)}
+.spot.happy .friend{animation:happy .5s}
+@keyframes happy{30%{transform:translateY(0) rotate(-12deg) scale(1.12)}70%{transform:translateY(0) rotate(12deg) scale(1.12)}}
+.shell{position:absolute;left:4%;right:4%;bottom:4%;height:44%;z-index:2;border-radius:50% 50% 22% 22% / 80% 80% 20% 20%;
+  background:repeating-conic-gradient(from -90deg at 50% 100%,var(--pink) 0 10deg,#FF7DBA 10deg 20deg);
+  box-shadow:inset 0 -8px 0 rgba(0,0,0,.08),0 6px 0 var(--shadow)}
+.spot:nth-child(even) .shell{background:repeating-conic-gradient(from -90deg at 50% 100%,var(--blue) 0 10deg,#5AA0FF 10deg 20deg)}
+
+/* Tuesday: Unicorn rainbow */
+#game.rainbow{background:linear-gradient(to bottom,#7FB2FF,#BFDAFF 55%,var(--pink-soft))}
+#game.rainbow .dot{background:rgba(42,36,102,.18)}
+#game.rainbow .dot.on{background:var(--pink)}
+.game-area.rainbow{display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:6px 16px 22px}
+.rb-sky{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;width:100%}
+.rb{width:min(92vw,520px,max(180px,calc((100vh - 340px) * 1.75)));height:auto;overflow:visible}
+.rb-base{fill:none;stroke:rgba(255,255,255,.4);stroke-width:15}
+.rb-base.next{stroke:#fff;animation:pulse 1.1s ease-in-out infinite alternate}
+@keyframes pulse{from{stroke-opacity:.35}to{stroke-opacity:1}}
+.rb-band{fill:none;stroke-width:15.5;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .8s ease-out}
+.rb-band.filled{stroke-dashoffset:0}
+.rb-uni{display:flex;align-items:center;gap:14px;border:0;background:none;padding:0}
+.uni{font-size:clamp(64px,16vw,96px);line-height:1;animation:bob 2.6s ease-in-out infinite}
+.talk{position:relative;display:flex;align-items:center;gap:10px;background:#fff;color:var(--ink);border-radius:24px;padding:10px 20px 10px 12px;
+  font-weight:900;font-size:clamp(24px,6vw,32px);box-shadow:0 5px 0 var(--shadow)}
+.talk::before{content:"";position:absolute;left:-10px;top:50%;margin-top:-10px;border:10px solid transparent;border-left:0;border-right-color:#fff}
+.swatch{width:40px;height:40px;border-radius:50%;box-shadow:inset 0 0 0 3px rgba(42,36,102,.15)}
+.pots{display:flex;gap:clamp(14px,5vw,36px);justify-content:center}
+.pot{width:clamp(92px,26vw,130px);aspect-ratio:1;border-radius:50%;border:6px solid #fff;padding:0;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.6) 0 11%,transparent 12%),var(--c);box-shadow:0 7px 0 var(--shadow);transition:transform .15s}
+.pot:active{transform:translateY(4px)}
+.pot.picked{transform:scale(1.12)}
+.pot.nope{animation:nope .4s}
+
+/* Wednesday: Shadow match */
+#game.shadow{background:linear-gradient(to bottom,var(--sky-top),var(--sky-mid) 70%,var(--sky-glow))}
+.game-area.shadow{display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:6px 16px 22px}
+.sh-stage{flex:1;display:grid;place-items:center}
+.sh-hero{border:0;background:radial-gradient(circle,rgba(255,243,196,.45),transparent 65%);padding:10px 30px;font-size:clamp(110px,30vw,180px);line-height:1}
+.sh-hero.enter{animation:enter .45s cubic-bezier(.3,1.6,.5,1)}
+.sh-choices{display:flex;gap:clamp(12px,4vw,28px);justify-content:center}
+.sh-card{width:clamp(96px,27vw,150px);aspect-ratio:1;border-radius:28px;border:5px solid #fff;background:var(--moon);padding:0;display:grid;place-items:center;
+  box-shadow:0 7px 0 var(--shadow);container-type:inline-size}
+.sil{font-size:64px;font-size:62cqi;line-height:1;filter:brightness(0) opacity(.72);transition:filter .4s}
+.sh-card.right{border-color:var(--pink);background:#fff}
+.sh-card.right .sil{filter:none}
+.sh-card.nope{animation:nope .4s}
 
 /* ---------- Overlays ---------- */
 .overlay{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:20px;background:rgba(38,32,100,.6)}
@@ -190,11 +198,11 @@ button:focus-visible{outline:4px solid var(--moon);outline-offset:4px}
   .stop.today .moon{width:44px;height:44px}.stop.today .house{font-size:44px}
   .play-circle{width:120px;border-width:6px}.play-emoji{font-size:66px}.play-label{font-size:20px;margin-top:-16px}
   .countdown{font-size:20px}
-  .jar{aspect-ratio:6/5;width:clamp(110px,24vw,160px)}.sort-item{width:110px}
-  .mermaid{font-size:70px}
+  .uni{font-size:48px}.talk{font-size:20px;padding:6px 14px 6px 8px}.swatch{width:28px;height:28px}
+  .pot{width:76px}.sh-hero{font-size:84px}.sh-card{width:84px}
 }
 @media (prefers-reduced-motion: reduce){
-  .play-emoji,.mermaid,.star.twinkle,.bubble .wob{animation:none}
+  .play-emoji,.uni,.star.twinkle,.rb-base.next{animation:none}
   .confetti{display:none}
 }
 </style>
@@ -254,17 +262,17 @@ button:focus-visible{outline:4px solid var(--moon);outline-offset:4px}
 <script>
 /* ============ Edit these to change names, dates, or messages ============ */
 const NAME = "Eevie";
-const HOME_DATE = 20261001; // the morning she sees Daddy again
+const HOME_DATE = 20261015; // the morning Daddy is home
 const DAYS = [
-  { date:20260928, name:"Monday", short:"Mon", game:"bubbles", icon:"🧜‍♀️", title:"Mermaid bubbles",
-    intro:"Help the mermaid! Pop the bubbles!",
-    goodnight:"Daddy had to go on a work trip today, and I'm already missing you. Only three more sleeps and I'll be home. Dream about mermaids and unicorns tonight. I love you to the moon and back!" },
-  { date:20260929, name:"Tuesday", short:"Tue", game:"match", icon:"🦄", title:"Unicorn match",
-    intro:"Tap the cards and find the ones that match!",
-    goodnight:"I hope you had a super fun day. Give Mommy a big hug from me. Just two more sleeps until I'm home! Sweet dreams, my sweet girl. I love you so much." },
-  { date:20260930, name:"Wednesday", short:"Wed", game:"sort", icon:"⭐", title:"Pink and blue",
-    intro:"Pink things go in the unicorn's jar. Blue things go in the mermaid's jar!",
-    goodnight:"This is the very last sleep! When you wake up in the morning, Daddy will be home. I'll sneak in and give you a kiss while you're sleeping. I love you!" }
+  { date:20261012, name:"Monday", short:"Mon", game:"peekaboo", icon:"🐚", title:"Shell peekaboo",
+    intro:"Say hi to the sea friends! Tap them when they peek out!",
+    goodnight:"Daddy went on another work trip today, and I'm already missing you. Only three more sleeps and I'll be home. Dream about mermaids and unicorns tonight. I love you to the moon and back!" },
+  { date:20261013, name:"Tuesday", short:"Tue", game:"rainbow", icon:"🦄", title:"Unicorn rainbow",
+    intro:"Help the unicorn make a rainbow!",
+    goodnight:"You are such a big helper for Mommy. Give her a great big hug from me tonight. Just two more sleeps until I'm home! Sweet dreams, my sweet girl. I love you so much." },
+  { date:20261014, name:"Wednesday", short:"Wed", game:"shadow", icon:"🧜‍♀️", title:"Shadow match",
+    intro:"Let's match the shadows!",
+    goodnight:"This is the very last sleep! When you wake up tomorrow, Daddy will be home. I can't wait to give you the biggest hug. I love you!" }
 ];
 const HOME_MSG = { title:"Good morning, " + NAME + "!",
   msg:"Daddy's home! I missed you so, so much. Come find me and give me the biggest hug ever!" };
@@ -335,6 +343,7 @@ function tone(freq, dur=.15, type="sine", vol=.2, when=0, slideTo=null){
 }
 const sfx = {
   pop(){ tone(480,.12,"sine",.25,0,1100); },
+  peek(){ tone(620,.12,"sine",.08,0,900); },
   chime(){ [880,1175,1568].forEach((f,i)=>tone(f,.25,"triangle",.15,i*.07)); },
   boop(){ tone(260,.2,"sine",.18,0,190); },
   flip(){ tone(700,.07,"triangle",.12); },
@@ -461,133 +470,153 @@ function sparkle(area, x, y){
   }
 }
 
-/* ---- Monday: Mermaid bubbles ---- */
-function bubbles(area){
-  const total = 12; let popped = 0, alive = true; const timers = [];
+const cap = s => s[0].toUpperCase() + s.slice(1);
+
+/* ---- Monday: Shell peekaboo ---- */
+function peekaboo(area){
+  const total = 10; let hellos = 0, alive = true; const timers = [];
+  const friends = [["🐠","fishy"],["🦀","crab"],["🐙","octopus"],["🐢","turtle"],["🐬","dolphin"],["🐡","puffer fish"],["🦭","seal"],["🧜‍♀️","mermaid"]];
   setProgress(0, total);
-  area.insertAdjacentHTML("beforeend", '<div class="mermaid">🧜‍♀️</div>');
-  const treats = ["🐠","🐚","⭐","🐙","💖","🦀","🐡","🌸","🐬"];
-  function spawn(){
+  const wrap = document.createElement("div"); wrap.className = "shells";
+  const spots = [];
+  for (let i=0;i<6;i++){
+    const s = document.createElement("button"); s.className = "spot"; s.setAttribute("aria-label", "Seashell");
+    s.innerHTML = '<span class="window"><span class="friend"></span></span><span class="shell"></span>';
+    s.addEventListener("pointerdown", e => { e.preventDefault(); hit(s); });
+    wrap.appendChild(s); spots.push(s);
+  }
+  area.appendChild(wrap);
+  function peek(){
     if (!alive) return;
-    if (area.querySelectorAll(".bubble:not(.popped)").length < 6) makeBubble();
-    timers.push(setTimeout(spawn, 650 + Math.random()*550));
-  }
-  function makeBubble(){
-    const w = area.clientWidth, h = area.clientHeight;
-    const size = Math.round(Math.min(130, Math.max(84, w*.2)) * (.85 + Math.random()*.3));
-    const b = document.createElement("button");
-    b.className = "bubble"; b.setAttribute("aria-label", "Pop the bubble");
-    b.style.width = b.style.height = size + "px";
-    b.style.left = Math.round(8 + Math.random()*Math.max(0, w-size-16)) + "px";
-    b.style.setProperty("--size", size+"px");
-    b.style.setProperty("--dur", (5.5 + Math.random()*3).toFixed(2)+"s");
-    b.style.setProperty("--rise", -(h + size + 170)+"px");
-    b.innerHTML = `<span class="wob" style="animation-delay:-${(Math.random()*1.8).toFixed(2)}s"><span class="in">${pick(treats)}</span></span>`;
-    b.addEventListener("pointerdown", e => { e.preventDefault(); pop(b); });
-    b.addEventListener("animationend", e => { if (e.target === b) b.remove(); });
-    area.appendChild(b);
-  }
-  function pop(b){
-    if (!alive || b.classList.contains("popped")) return;
-    b.classList.add("popped");
-    const r = b.getBoundingClientRect(), ar = area.getBoundingClientRect();
-    b.style.bottom = "auto"; b.style.top = (r.top-ar.top)+"px"; b.style.left = (r.left-ar.left)+"px";
-    b.style.transform = "none"; b.style.animation = "popit .28s ease-out forwards";
-    sparkle(area, r.left-ar.left+r.width/2, r.top-ar.top+r.height/2);
-    sfx.pop();
-    popped++; setProgress(popped, total); say(String(popped));
-    if (popped >= total){ alive = false; timers.push(setTimeout(win, 900)); }
-  }
-  spawn();
-  return { stop(){ alive = false; timers.forEach(clearTimeout); } };
-}
-
-/* ---- Tuesday: Unicorn match ---- */
-function match(area){
-  const pool = ["🦄","🧜‍♀️","🌈","🐚","💖","🍓","⭐","🐬"];
-  const picks = ["🦄", ...shuffle(pool.slice(1)).slice(0,2)];
-  const cards = shuffle([...picks, ...picks]);
-  const total = 3; let found = 0, open = [], lock = false, alive = true; const timers = [];
-  setProgress(0, total);
-  const grid = document.createElement("div"); grid.className = "grid";
-  cards.forEach(em => {
-    const c = document.createElement("button"); c.className = "card"; c.dataset.em = em; c.setAttribute("aria-label", "Card");
-    c.innerHTML = `<span class="inner"><span class="face back">✨</span><span class="face front">${em}</span></span>`;
-    c.addEventListener("pointerdown", e => { e.preventDefault(); flip(c); });
-    grid.appendChild(c);
-  });
-  area.appendChild(grid);
-  function flip(c){
-    if (!alive || lock || c.classList.contains("up")) return;
-    c.classList.add("up"); sfx.flip(); open.push(c);
-    if (open.length < 2) return;
-    lock = true; const [a, b] = open;
-    if (a.dataset.em === b.dataset.em){
-      timers.push(setTimeout(() => {
-        a.classList.add("matched"); b.classList.add("matched"); sfx.chime();
-        found++; setProgress(found, total); open = []; lock = false;
-        if (found === total){ alive = false; timers.push(setTimeout(win, 900)); }
-        else say(pick(["Yay! A match!","You found it!","Great job!"]));
-      }, 400));
-    } else {
-      timers.push(setTimeout(() => { a.classList.remove("up"); b.classList.remove("up"); open = []; lock = false; }, 1100));
+    const upCount = spots.filter(s => s.classList.contains("up")).length;
+    const free = spots.filter(s => !s.classList.contains("up") && !s.resting);
+    if (upCount < 2 && free.length){
+      const s = pick(free), [em, nm] = pick(friends);
+      s.querySelector(".friend").textContent = em; s.dataset.name = nm; s.tapped = false;
+      s.classList.add("up"); sfx.peek();
+      s.downT = setTimeout(() => down(s), 1900 + Math.random()*900); timers.push(s.downT);
     }
+    timers.push(setTimeout(peek, 900 + Math.random()*700));
   }
+  function down(s){
+    s.classList.remove("up", "happy"); s.resting = true;
+    timers.push(setTimeout(() => { s.resting = false; }, 500));
+  }
+  function hit(s){
+    if (!alive || !s.classList.contains("up") || s.tapped) return;
+    s.tapped = true; clearTimeout(s.downT);
+    s.classList.add("happy"); sfx.chime();
+    const r = s.getBoundingClientRect(), ar = area.getBoundingClientRect();
+    sparkle(area, r.left-ar.left+r.width/2, r.top-ar.top+r.height*.35);
+    hellos++; setProgress(hellos, total); say(`Hi, ${s.dataset.name}!`);
+    timers.push(setTimeout(() => down(s), 750));
+    if (hellos >= total){ alive = false; timers.push(setTimeout(win, 1200)); }
+  }
+  timers.push(setTimeout(peek, 1200));
   return { stop(){ alive = false; timers.forEach(clearTimeout); } };
 }
 
-/* ---- Wednesday: Pink and blue ---- */
-function shapeSVG(shape, color){
-  const fill = color === "pink" ? "#FF4FA3" : "#2F86FF";
-  const face = y => `<circle cx="40" cy="${y}" r="4.5" fill="#2A2466"/><circle cx="60" cy="${y}" r="4.5" fill="#2A2466"/><path d="M42 ${y+9} Q50 ${y+16} 58 ${y+9}" stroke="#2A2466" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
-  let body;
-  if (shape === "star") body = `<polygon points="50,5 62,37 96,38 69,59 79,93 50,73 21,93 31,59 4,38 38,37" fill="${fill}" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>` + face(50);
-  else if (shape === "heart") body = `<path d="M50 90 C 22 70, 5 52, 5 32 C 5 17, 16 7, 29 7 C 39 7, 46 13, 50 21 C 54 13, 61 7, 71 7 C 84 7, 95 17, 95 32 C 95 52, 78 70, 50 90 Z" fill="${fill}" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>` + face(38);
-  else body = `<circle cx="50" cy="50" r="42" fill="${fill}" stroke="#fff" stroke-width="5"/><circle cx="34" cy="31" r="9" fill="#fff" opacity=".55"/>` + face(48);
-  return `<svg viewBox="0 0 100 100" aria-hidden="true">${body}</svg>`;
-}
-function sort(area){
-  const total = 10; let done = 0, alive = true, busy = false, cur = null; const timers = [];
-  const queue = shuffle([..."ppppp".split("").map(()=>"pink"), ..."bbbbb".split("").map(()=>"blue")])
-    .map(color => ({ color, shape: pick(["star","heart","pearl"]) }));
-  const counts = { pink:0, blue:0 };
+/* ---- Tuesday: Unicorn rainbow ---- */
+const COLORS = [
+  { name:"red", hex:"#FF4D4D" }, { name:"orange", hex:"#FF9A3C" }, { name:"yellow", hex:"#FFD93B" },
+  { name:"green", hex:"#3CCB6E" }, { name:"blue", hex:"#2F86FF" }, { name:"purple", hex:"#9B5CFF" }
+];
+function rainbow(area){
+  const total = COLORS.length; let step = 0, alive = true, busy = false; const timers = [];
   setProgress(0, total);
+  const radii = [140,124,108,92,76,60];
+  const arc = r => `M ${150-r} 160 A ${r} ${r} 0 0 1 ${150+r} 160`;
   area.innerHTML = `
-    <div class="sort-stage"><button class="sort-item" aria-label="Tap to hear the color"></button></div>
-    <div class="jars">
-      <button class="jar blue" data-color="blue" aria-label="Blue jar"><span class="jar-fill"></span><span class="jar-pet">🧜‍♀️</span><span class="jar-label">Blue</span></button>
-      <button class="jar pink" data-color="pink" aria-label="Pink jar"><span class="jar-fill"></span><span class="jar-pet">🦄</span><span class="jar-label">Pink</span></button>
-    </div>`;
-  const item = area.querySelector(".sort-item");
-  const cap = s => s[0].toUpperCase() + s.slice(1);
-  function next(){
-    cur = queue.shift();
-    item.innerHTML = shapeSVG(cur.shape, cur.color);
-    item.className = "sort-item"; void item.offsetWidth; item.className = "sort-item enter";
+    <div class="rb-sky">
+      <svg class="rb" viewBox="0 0 300 168" aria-hidden="true">
+        ${radii.map((r,i) => `<path class="rb-base" data-i="${i}" d="${arc(r)}"/><path class="rb-band" data-i="${i}" d="${arc(r)}" pathLength="1" stroke="${COLORS[i].hex}"/>`).join("")}
+      </svg>
+      <button class="rb-uni" aria-label="Hear it again"><span class="uni">🦄</span><span class="talk"><span class="swatch"></span><span class="ask"></span></span></button>
+    </div>
+    <div class="pots"></div>`;
+  const potsEl = area.querySelector(".pots"), askEl = area.querySelector(".ask"), swatch = area.querySelector(".swatch");
+  function round(speak){
+    const target = COLORS[step];
+    area.querySelectorAll(".rb-base").forEach(p => p.classList.toggle("next", +p.dataset.i === step));
+    askEl.textContent = cap(target.name) + "!"; swatch.style.background = target.hex;
+    const others = shuffle(COLORS.filter(c => c !== target)).slice(0,2);
+    potsEl.innerHTML = "";
+    shuffle([target, ...others]).forEach(c => {
+      const b = document.createElement("button"); b.className = "pot";
+      b.style.setProperty("--c", c.hex); b.dataset.name = c.name; b.setAttribute("aria-label", c.name + " paint");
+      b.addEventListener("pointerdown", e => { e.preventDefault(); choose(b); });
+      potsEl.appendChild(b);
+    });
     busy = false;
+    if (speak) say(`Find ${target.name}!`);
   }
-  item.addEventListener("pointerdown", e => { e.preventDefault(); if (cur && !busy) say(`${cap(cur.color)} ${cur.shape}!`); });
-  area.querySelectorAll(".jar").forEach(j => j.addEventListener("pointerdown", e => { e.preventDefault(); choose(j); }));
-  function choose(j){
-    if (!alive || busy || !cur) return;
-    if (j.dataset.color === cur.color){
-      busy = true; sfx.chime(); say(cap(cur.color) + "!");
-      const ir = item.getBoundingClientRect(), jr = j.getBoundingClientRect();
-      item.style.setProperty("--fx", (jr.left + jr.width/2 - (ir.left + ir.width/2)) + "px");
-      item.style.setProperty("--fy", (jr.top + jr.height*.45 - (ir.top + ir.height/2)) + "px");
-      item.className = "sort-item fly";
-      counts[cur.color]++; j.querySelector(".jar-fill").style.height = (counts[cur.color]/5*72) + "%";
-      done++; setProgress(done, total);
-      timers.push(setTimeout(() => { if (done >= total){ alive = false; win(); } else next(); }, 650));
+  function choose(b){
+    if (!alive || busy) return;
+    const target = COLORS[step];
+    if (b.dataset.name === target.name){
+      busy = true; sfx.chime(); say(`${cap(target.name)}! Yay!`);
+      area.querySelector(`.rb-band[data-i="${step}"]`).classList.add("filled");
+      b.classList.add("picked");
+      step++; setProgress(step, total);
+      if (step >= total){
+        alive = false; area.querySelectorAll(".rb-base").forEach(p => p.classList.remove("next"));
+        timers.push(setTimeout(win, 1300));
+      } else timers.push(setTimeout(() => round(true), 1400));
     } else {
-      sfx.boop(); say(`Oops! That one is ${cur.color}. Try the ${cur.color} jar!`);
-      j.classList.remove("nope"); void j.offsetWidth; j.classList.add("nope");
+      sfx.boop(); say(`That's ${b.dataset.name}. Find ${target.name}!`);
+      b.classList.remove("nope"); void b.offsetWidth; b.classList.add("nope");
     }
   }
-  next();
+  area.querySelector(".rb-uni").addEventListener("pointerdown", e => { e.preventDefault(); if (alive) say(`Find ${COLORS[step].name}!`); });
+  round(false);
+  timers.push(setTimeout(() => { if (alive && step === 0 && !busy) say(`Find ${COLORS[0].name}!`); }, 2400));
   return { stop(){ alive = false; timers.forEach(clearTimeout); } };
 }
-const GAMES = { bubbles, match, sort };
+
+/* ---- Wednesday: Shadow match ---- */
+function shadow(area){
+  const pool = [["🦄","unicorn"],["🧜‍♀️","mermaid"],["🐢","turtle"],["🦀","crab"],["🐙","octopus"],["🐳","whale"],["⭐","star"],["🦋","butterfly"],["🐚","seashell"],["🐬","dolphin"]];
+  const total = 6;
+  const order = shuffle([pool[0], pool[1], ...shuffle(pool.slice(2)).slice(0,4)]);
+  let step = 0, alive = true, busy = false; const timers = [];
+  setProgress(0, total);
+  area.innerHTML = `<div class="sh-stage"><button class="sh-hero" aria-label="Hear the name"></button></div><div class="sh-choices"></div>`;
+  const hero = area.querySelector(".sh-hero"), choices = area.querySelector(".sh-choices");
+  function round(speak){
+    const [em, nm] = order[step];
+    hero.textContent = em; hero.className = "sh-hero"; void hero.offsetWidth; hero.className = "sh-hero enter";
+    const others = shuffle(pool.filter(p => p[0] !== em)).slice(0,2);
+    choices.innerHTML = "";
+    shuffle([order[step], ...others]).forEach(([e, n]) => {
+      const b = document.createElement("button"); b.className = "sh-card"; b.dataset.em = e; b.setAttribute("aria-label", "Shadow");
+      b.innerHTML = `<span class="sil">${e}</span>`;
+      b.addEventListener("pointerdown", ev => { ev.preventDefault(); choose(b); });
+      choices.appendChild(b);
+    });
+    busy = false;
+    if (speak) say(`Where is the ${nm}'s shadow?`);
+  }
+  function choose(b){
+    if (!alive || busy) return;
+    const [em, nm] = order[step];
+    if (b.dataset.em === em){
+      busy = true; b.classList.add("right"); sfx.chime(); say(`Yes! The ${nm}!`);
+      const r = b.getBoundingClientRect(), ar = area.getBoundingClientRect();
+      sparkle(area, r.left-ar.left+r.width/2, r.top-ar.top+r.height/2);
+      step++; setProgress(step, total);
+      if (step >= total){ alive = false; timers.push(setTimeout(win, 1300)); }
+      else timers.push(setTimeout(() => round(true), 1500));
+    } else {
+      sfx.boop(); say("Hmm, not that one. Try again!");
+      b.classList.remove("nope"); void b.offsetWidth; b.classList.add("nope");
+    }
+  }
+  hero.addEventListener("pointerdown", e => { e.preventDefault(); if (alive && !busy) say(`The ${order[step][1]}! Where is its shadow?`); });
+  round(false);
+  timers.push(setTimeout(() => { if (alive && step === 0 && !busy) say(`Where is the ${order[0][1]}'s shadow?`); }, 2200));
+  return { stop(){ alive = false; timers.forEach(clearTimeout); } };
+}
+const GAMES = { peekaboo, rainbow, shadow };
 
 /* ---- Goodnight message ---- */
 function openGoodnight(){
